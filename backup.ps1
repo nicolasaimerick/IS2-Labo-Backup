@@ -6,7 +6,14 @@ if (-not (Test-Path -Path $DestinationBase)) {
 }
 
 $DateDuJour = Get-Date -Format "yyyy-MM-dd"
+$DateHeureExacte = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+$NombreFichiers = (Get-ChildItem -Path $Source -File -Recurse).Count
 $CheminZip = "$DestinationBase\Backup_$DateDuJour.zip"
 
 Compress-Archive -Path "$Source\*" -DestinationPath $CheminZip -Force
-Write-Host "Sauvegarde compressée directement dans : $CheminZip"
+
+$FichierLog = "$DestinationBase\historique.txt"
+$LigneJournal = "[$DateHeureExacte] Sauvegarde réussie : $NombreFichiers fichier(s) compressé(s) dans Backup_$DateDuJour.zip"
+Add-Content -Path $FichierLog -Value $LigneJournal
+
+Write-Host "Sauvegarde terminée ! Le journal a été mis à jour dans : $FichierLog"
